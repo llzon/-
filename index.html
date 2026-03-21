@@ -2,434 +2,2419 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>计件工资</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>计件工资管理</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,sans-serif}
-body{background:#f7f7fa;padding:6px}
-.main{max-width:100%;margin:0 auto;background:#fff;border-radius:10px;padding:10px}
-h3{text-align:center;margin-bottom:8px;font-size:17px}
+/* 基础重置 */
+* {box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-weight:600!important;}
+html,body {height:100%;overflow:hidden;font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;background:linear-gradient(135deg, #f0f4f8 0%, #e6eef7 100%);font-size:22px;}
+body {padding:4px;}
 
-.item-head{display:grid;grid-template-columns:2fr 1fr 1fr 40px;gap:5px;font-size:12px;color:#666;margin-bottom:4px}
-.item{display:grid;grid-template-columns:2fr 1fr 1fr 40px;gap:5px;margin-bottom:5px}
-.item input{padding:6px;border:1px solid #eee;border-radius:4px;font-size:12px;width:100%}
-.item-del{background:#f33;color:#fff;border:none;border-radius:4px;font-size:11px}
+/* 主容器适配手机 */
+.main {width:100%;height:100vh;background:rgba(250,252,255,0.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-radius:12px;border:1px solid rgba(230,235,240,0.8);padding:8px;display:flex;flex-direction:column;position:relative;z-index:2;box-shadow:0 8px 24px rgba(0,0,0,0.06);overflow:hidden;gap:8px;}
+.top-fixed {flex-shrink:0;flex-grow:0;max-height:65vh;overflow-y:auto;padding-bottom:20px;}
+.scroll-container {flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-right:4px;}
 
-.tpl-box{border:1px solid #eee;border-radius:6px;padding:8px;margin-bottom:8px;background:#fcfcfc}
-.tpl-title{font-weight:bold;margin-bottom:6px;text-align:center;font-size:13px}
-.tpl-input{display:grid;grid-template-columns:1fr 70px;gap:5px;margin-bottom:6px}
-.tpl-input input{padding:6px;border:1px solid #eee;border-radius:4px;font-size:12px}
-.tpl-list{display:flex;flex-wrap:wrap;gap:5px;max-height:90px;overflow-y:auto}
-.tpl-item{background:#f8f8f8;border:1px solid #eee;border-radius:4px;padding:4px 6px;font-size:12px;display:flex;align-items:center}
-.tpl-use{color:#007aff;margin-right:4px;cursor:pointer;font-weight:bold}
-.tpl-text{cursor:pointer;flex:1}
-.tpl-del{color:#f33;margin-left:4px;cursor:pointer}
-
-.day-box{border:1px solid #eee;border-radius:6px;padding:8px;margin-bottom:6px}
-.day-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
-.day-left{display:flex;align-items:center;gap:5px}
-.day-total{color:#007aff;font-weight:bold;font-size:13px}
-.day-rest{color:#f33;font-weight:bold;font-size:13px}
-.del-btn{padding:4px 6px;background:#f33;color:white;border:none;border-radius:4px;font-size:11px}
-.collapse-btn{font-size:14px;padding:0 2px;cursor:pointer}
-
-.add-row-btn{width:100%;padding:6px;margin-top:5px;background:#007aff;color:#fff;border:none;border-radius:4px;font-size:12px}
-
-button{cursor:pointer}
-.export{background:#007aff;width:100%;margin-top:6px;padding:7px;border:none;border-radius:5px;color:#fff;font-size:13px}
-.clear-trash{background:#999;width:100%;margin-top:6px;padding:7px;border:none;border-radius:5px;color:#fff;font-size:13px}
-.all-total{text-align:right;font-size:14px;font-weight:bold;margin-top:8px;padding-top:6px;border-top:1px solid #f0f0f0}
-
-.trash-box{border:1px solid #eee;border-radius:6px;padding:8px;margin-top:8px;background:#fcfcfc}
-.trash-title{font-weight:bold;margin-bottom:5px;text-align:center;font-size:13px}
-.trash-item{display:flex;justify-content:space-between;align-items:center;padding:5px;font-size:12px;border-bottom:1px solid #f0f0f0}
-.trash-item:last-child{border-bottom:none}
-.trash-restore{padding:3px 6px;background:#007aff;color:#fff;border:none;border-radius:4px;font-size:11px;margin-right:4px}
-.trash-delete{padding:3px 6px;background:#f33;color:#fff;border:none;border-radius:4px;font-size:11px}
-
-.btn-row{
-  display:flex;gap:5px;margin-top:8px
+/* ===== 统一按钮样式 - 手机适配 ===== */
+button {
+  background:linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border:1px solid rgba(200,210,225,0.7);
+  color:#445566;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:16px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  min-height:40px;
+  line-height:1.4;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  width: 100%;
 }
-.btn-half{
-  flex:1;padding:7px;border:none;border-radius:5px;color:#fff;font-size:13px
+
+button:hover {transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,0.08);}
+button:active {transform:scale(0.96);background:linear-gradient(180deg, #e8f0ff 0%, #d8e5f8 100%);}
+
+/* 主要按钮样式 */
+.btn-primary,.tpl-box>button,button[onclick="addOrToggleWork()"] {
+  background:linear-gradient(180deg, #d8e8ff 0%, #c5d9f8 100%)!important;
+  color:#2d4a6c!important;
+  border-color:rgba(180,200,230,0.8)!important;
+  font-size:16px!important;
+  min-height:40px!important;
+  padding:10px 12px!important;
 }
-.btn-expand{
-  background:#2da678;
+.btn-primary:hover,.tpl-box>button:hover,button[onclick="addOrToggleWork()"]:hover {
+  background:linear-gradient(180deg, #c8dbff 0%, #b5ccf2 100%)!important;
 }
-.btn-collapse{
-  background:#6c757d;
+.btn-primary:active,.tpl-box>button:active,button[onclick="addOrToggleWork()"]:active {
+  transform:scale(0.96)!important;background:linear-gradient(180deg, #b8cbf0 0%, #a5bce8 100%)!important;
+}
+
+/* 休息按钮 */
+button[onclick="addOrToggleRest()"] {
+  background:linear-gradient(180deg, #d8f0e8 0%, #c5e5dc 100%)!important;
+  color:#2d5c4a!important;
+  border-color:rgba(180,220,210,0.8)!important;
+  font-size:16px!important;
+  min-height:40px!important;
+  padding:10px 12px!important;
+}
+button[onclick="addOrToggleRest()"]:hover {
+  background:linear-gradient(180deg, #c8e8e0 0%, #b5ded4 100%)!important;
+}
+button[onclick="addOrToggleRest()"]:active {
+  transform:scale(0.96);background:linear-gradient(180deg, #b8e0d8 0%, #a5d5cd 100%)!important;
+}
+
+/* 危险按钮（删除类） */
+.month-del-btn,.day-del-btn,.item-del,.tpl-del,.trash-clear-btn {
+  background:linear-gradient(180deg, #ffe8e8 0%, #ffd4d4 100%)!important;
+  color:#8b4a4a!important;
+  border:none!important;
+  font-size:16px!important;
+  width:100%!important;
+  min-height:40px!important;
+  height:auto!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  border-radius:10px!important;
+  padding:10px 12px!important;
+  line-height:1.4!important;
+}
+.month-del-btn:hover,.day-del-btn:hover,.item-del:hover,.tpl-del:hover,.trash-clear-btn:hover {
+  background:linear-gradient(180deg, #ffd8d8 0%, #ffc4c4 100%)!important;
+}
+.month-del-btn:active,.day-del-btn:active,.item-del:active,.tpl-del:active,.trash-clear-btn:active {
+  transform:scale(0.94);background:linear-gradient(180deg, #ffc8c8 0%, #ffb4b4 100%)!important;
+}
+
+/* 模板列表 - 横向两个布局 */
+.tpl-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 横向两个 */
+  gap: 8px;
+  max-height: 120px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 8px;
+}
+.tpl-item {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border:1px solid rgba(220,230,240,0.7);
+  padding:10px 8px;
+  border-radius:8px;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  color:#445566;
+  transition:all 0.25s;
+  box-shadow:0 2px 6px rgba(0,0,0,0.03);
+  cursor:pointer;
+  min-height:40px;
+  text-align:center;
+  justify-content:center;
+  flex-wrap: wrap;
+}
+.tpl-item:hover {transform:translateY(-1px);box-shadow:0 4px 10px rgba(0,0,0,0.06);}
+.tpl-item:active {transform:scale(0.95);}
+.tpl-text {flex:1;color:#445566;font-size:15px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+/* 月份标题 */
+.month-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  background: linear-gradient(180deg, #f0f6ff 0%, #e6efff 100%);
+  font-weight: 600;
+  font-size: 16px;
+  color: #334455;
+  min-height: 40px;
+}
+
+.month-title-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.month-toggle {
+  cursor: pointer;
+  min-width: 20px;
+  font-size: 16px;
+}
+
+.month-text {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.month-del-btn {
+  width: auto !important;
+  min-height: 40px !important;
+  padding: 6px 10px !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  margin-left: 6px !important;
+}
+
+/* 日期容器 */
+.day-date-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+}
+
+.day-date-container input[type="date"] {
+  flex: 1;
+  min-width: 120px;
+  min-height: 40px !important;
+}
+
+.day-date-container .day-del-btn {
+  width: auto !important;
+  min-height: 40px !important;
+  padding: 6px 10px !important;
+  font-size: 14px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0;
+}
+
+/* 日常头部 */
+.day-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 12px;
+  font-size:16px;
+  min-height: 40px;
+}
+
+.day-total {color:#2d4a6c;font-weight:600;font-size:16px;}
+.day-rest {color:#2d5c4a;font-weight:600;font-size:16px;}
+
+/* ===== 关键修改：输入框样式 - 统一所有输入框样式 ===== */
+/* 日下面工序记录的输入框样式 */
+.item input {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  border:1px solid rgba(200,210,225,0.8);
+  border-radius:10px;
+  padding:10px;
+  font-size:16px;
+  color:#445566;
+  font-weight:600;
+  box-shadow:inset 0 1px 3 rgba(0,0,0,0.03);
+  cursor:text;
+  min-height:40px;
+  width: 100%; /* 确保宽度填充容器 */
+  overflow: visible; /* 防止文字被截断 */
+  white-space: nowrap; /* 防止换行 */
+}
+
+/* 模板添加区域的输入框样式 - 完全与日下面工序输入框一致 */
+.tpl-input input {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  border:1px solid rgba(200,210,225,0.8);
+  border-radius:10px;
+  padding:10px;
+  font-size:16px;
+  color:#445566;
+  font-weight:600;
+  box-shadow:inset 0 1px 3 rgba(0,0,0,0.03);
+  cursor:text;
+  min-height:40px;
+  width: 100%; /* 确保宽度填充容器 */
+  overflow: visible; /* 防止文字被截断 */
+  white-space: nowrap; /* 防止换行 */
+}
+
+/* 其他输入框样式 */
+input[type="date"],input#tplName,input#tplPrice,.item input {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+  border:1px solid rgba(200,210,225,0.8);
+  border-radius:10px;
+  padding:10px;
+  font-size:16px;
+  color:#445566;
+  font-weight:600;
+  box-shadow:inset 0 1px 3 rgba(0,0,0,0.03);
+  cursor:text;
+  min-height:40px;
+  width: 100%; /* 确保宽度填充容器 */
+  overflow: visible; /* 防止文字被截断 */
+  white-space: nowrap; /* 防止换行 */
+}
+
+input[type="date"]:focus, input#tplName:focus, input#tplPrice:focus, .item input:focus, #tplCount:focus {
+  outline:none;
+  border-color:#a5c4f0;
+  box-shadow:0 0 0 2px rgba(165,196,240,0.3);
+}
+
+/* 面板样式 */
+.check-panel,.trash-panel {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100vh;
+  background:rgba(245,248,252,0.97);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  z-index:999;
+  transition: transform 0.32s cubic-bezier(0.2, 1);
+  padding:12px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.trash-panel  { transform: translateX(-100%); }
+.check-panel  { transform: translateX(100%); }
+.trash-panel.show { transform: translateX(0); }
+.check-panel.show { transform: translateX(0); }
+
+.panel-top-btns {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.panel-scroll-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-right: 4px;
+}
+
+/* ===== 统一按钮组容器 - 确保大小一致 ===== */
+/* 回收站按钮组 */
+.trash-btn-group {
+  display: flex;
+  flex-direction: column; /* 垂直排列 */
+  gap: 8px; /* 按钮间距 */
+}
+
+.trash-btn-group button {
+  flex: 0 0 auto; /* 不伸缩，保持固定高度 */
+  min-height: 40px; /* 减小高度 */
+  font-size: 16px;
+  padding: 10px 12px; /* 减小内边距 */
+  width: 100%; /* 宽度100% */
+}
+
+/* 退出回收站按钮样式 */
+.exit-trash-btn {
+  background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%) !important;
+  color: #445566 !important;
+  border: 1px solid rgba(200,210,225,0.7) !important;
+}
+
+.exit-trash-btn:hover {
+  background: linear-gradient(180deg, #e8f0ff 0%, #d8e5f8 100%) !important;
+}
+
+/* 对账面板的关闭按钮 - 与回收站按钮大小完全一致 */
+.close-check-btn {
+  min-height: 40px; /* 减小高度 */
+  font-size: 16px;
+  padding: 10px 12px; /* 减小内边距 */
+  width: 100%;
+  background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+  color: #445566;
+  border: 1px solid rgba(200,210,225,0.7);
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.close-check-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  background: linear-gradient(180deg, #e8f0ff 0%, #d8e5f8 100%);
+}
+
+.close-check-btn:active {
+  transform: scale(0.96);
+  background: linear-gradient(180deg, #e8f0ff 0%, #d8e5f8 100%);
+}
+
+/* 其他UI组件 */
+.popup-mask {
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.15);
+  backdrop-filter:blur(6px);
+  z-index:9999;
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+
+.popup-box {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(220,230,240,0.7);
+  width:90%;
+  max-width:400px;
+  padding:24px;
+  border-radius:16px;
+  text-align:center;
+  box-shadow:0 10px 30 rgba(0,0,0,0.1);
+}
+
+.popup-title {
+  font-size:24px;
+  font-weight:600;
+  margin-bottom:10px;
+  color:#334455;
+}
+
+.popup-box p {
+  font-size:18px;
+  margin-bottom:10px;
+  color:#556677;
+}
+
+.jump-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.jump-row input,.jump-row button {
+  width: 100%;
+  min-height:40px;
+  font-size:16px;
+}
+
+/* ===== 关键修改：模板添加区域调整为与日下面工序记录完全一致 ===== */
+/* 模板添加区域 - 完全与日下面工序记录一致 */
+.tpl-input {
+  display:grid;
+  /* 关键修改：移除数量列，改为两列：工序名2fr，单价1.5fr，确认按钮40px */
+  grid-template-columns: 2fr 1.5fr 40px;
+  gap:6px;
+  margin-bottom:6px;
+  align-items:center;
+  font-size:16px;
+  position: relative;
+  z-index: 5;
+  min-height: 40px; /* 确保有最小高度 */
+}
+
+/* ===== 关键修改：模板添加区域的确认按钮大小调整 ===== */
+/* 模板添加区域的确认按钮 - 大小与日期区域的跳转、回到今日按钮完全一致 */
+.tpl-input .tpl-add-btn {
+  width:100%; /* 宽度100%以填充网格单元格 */
+  height:40px;
+  min-height:40px;
+  padding:10px 12px; /* 与日期区域按钮相同的内边距 */
+  font-size:16px;
+  font-weight:600;
+  color:#2d4a6c!important;
+  background:linear-gradient(180deg, #d8e8ff 0%, #c5d9f8 100%)!important;
+  border:1px solid rgba(180,200,230,0.8)!important;
+  border-radius:10px;
+  cursor:pointer;
+  transition:all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+  line-height:1.4;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  /* 确保按钮文本不换行 */
+  white-space: nowrap;
+}
+
+.tpl-input .tpl-add-btn:hover {
+  background:linear-gradient(180deg, #c8dbff 0%, #b5ccf2 100%)!important;
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.tpl-input .tpl-add-btn:active {
+  transform:scale(0.96);
+  background:linear-gradient(180deg, #b8cbf0 0%, #a5bce8 100%)!important;
+}
+
+/* 修复工资记录输入框 - 保持原样 */
+.item-head,.item {
+  display:grid;
+  /* 调整列宽：工序名2fr，单价1.5fr，数量1.5fr，删除按钮40px */
+  grid-template-columns: 2fr 1.5fr 1.5fr 40px;
+  gap:6px;
+  font-size:16px;
+  margin-bottom:6px;
+  min-height: 40px;
+}
+
+/* 修复新增一行按钮被遮挡 - 增加底部内边距，将按钮与输入框分离 */
+.day-box > div[style*="display:block"] {
+  margin-top:6px;
+  padding-bottom: 40px; /* 减少底部内边距，避免过多空白 */
+  margin-bottom: 8px;
+}
+
+/* 新增一行按钮样式调整 - 避免遮挡输入框 */
+.add-row-btn {
+  width: 100%;
+  margin-top: 4px; /* 减小与输入框的间距 */
+  padding: 10px 12px;
+  font-size: 16px;
+  min-height:40px;
+}
+
+.panel-title {
+  text-align:center;
+  font-size:22px;
+  font-weight:600;
+  margin-bottom:10px;
+  color:#334455;
+}
+
+.backup-restore-btns {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.backup-restore-btns button {
+  flex: 1;
+  min-height:40px;
+  font-size:16px;
+}
+
+.stats-box {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(220,230,240,0.7);
+  border-radius:12px;
+  padding:8px;
+  margin-bottom:8px;
+  font-size:14px;
+}
+
+.stats-title {
+  font-size:14px;
+  font-weight:600;
+  color:#334455;
+  margin-bottom:4px;
+}
+
+.stats-content {
+  font-size:14px;
+  color:#556677;
+  line-height:1.4;
+}
+
+.stats-item {
+  margin-bottom:2px;
+}
+
+/* ===== 关键修改：跳转日期控件布局 ===== */
+.date-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 10;
+}
+
+.date-buttons input[type="date"] {
+  flex: 2;
+  min-width: 120px;
+  min-height: 40px !important;
+}
+
+.date-buttons button {
+  flex: 1;
+  min-width: 80px;
+  min-height: 40px !important;
+  padding: 10px 12px !important; /* 确保与模板添加区域按钮内边距一致 */
+}
+
+/* 确保跳转控件在一行显示 */
+@media screen and (min-width: 360px) {
+  .date-buttons {
+    flex-wrap: nowrap;
+  }
+}
+
+/* 减少顶部控件之间的间距，为工资记录留出更多空间 */
+.top-fixed > * + * {
+  margin-top: 6px;
+}
+
+/* 增加工资记录区域的视觉高度 */
+.scroll-container {
+  padding-top: 4px;
+}
+
+.scroll-container::-webkit-scrollbar,
+.panel-scroll-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb,
+.panel-scroll-content::-webkit-scrollbar-thumb {
+  background: rgba(180,190,210,0.6);
+  border-radius: 3px;
+}
+
+.scroll-container::-webkit-scrollbar-track,
+.panel-scroll-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Toast提示 */
+.success-toast {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(40, 167, 69, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  z-index: 10001;
+  display: none;
+  text-align: center;
+  max-width: 90%;
+}
+
+.error-toast {
+  position: fixed;
+  bottom: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  z-index: 10001;
+  display: none;
+  text-align: center;
+  max-width: 90%;
+}
+
+.exit-toast {
+  position: fixed;
+  bottom: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 18px;
+  z-index: 10000;
+  display: none;
+  text-align: center;
+  max-width: 90%;
+}
+
+.file-toast {
+  position: fixed;
+  bottom: 180px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  z-index: 10001;
+  display: none;
+  text-align: center;
+  max-width: 90%;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+/* ===== 移动端深度适配 ===== */
+@media screen and (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+
+  .main {
+    border-radius: 0;
+    border: none;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  /* 确保所有按钮有足够大的点击区域 */
+  button, .tpl-item, .day-del-btn, .month-del-btn, .close-check-btn {
+    min-height: 40px !important;
+  }
+
+  /* 增加按钮内边距，更容易点击 */
+  button {
+    padding: 10px 12px !important;
+  }
+
+  /* 模板项调整 */
+  .tpl-item {
+    padding: 10px 8px !important;
+    font-size: 14px !important;
+  }
+
+  /* 输入框调整 */
+  input[type="date"], input#tplName, input#tplPrice, .item input, #tplCount {
+    min-height: 40px !important;
+    padding: 10px !important;
+    font-size: 16px !important;
+  }
+
+  /* 日期容器调整 */
+  .day-date-container input[type="date"] {
+    min-height: 40px !important;
+  }
+
+  /* 面板调整 */
+  .check-panel, .trash-panel {
+    padding: 8px;
+  }
+
+  /* 标题调整 */
+  .popup-title {
+    font-size: 22px;
+  }
+
+  /* 按钮组调整 - 确保垂直排列 */
+  .trash-btn-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .trash-btn-group button {
+    width: 100%;
+  }
+
+  /* 对账面板关闭按钮调整 */
+  .close-check-btn {
+    width: 100%;
+  }
+}
+
+/* 针对不同屏幕尺寸的微调 */
+@media screen and (max-width: 480px) {
+  /* 超小屏幕优化 */
+  .tpl-list {
+    gap: 6px;
+    max-height: 100px;
+  }
+
+  .tpl-item {
+    font-size: 13px;
+    min-height: 36px;
+    padding: 8px 6px;
+  }
+
+  /* 按钮组垂直排列，间距稍小 */
+  .trash-btn-group {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .trash-btn-group button {
+    width: 100%;
+  }
+
+  /* 输入框字体微调 */
+  input[type="date"], input#tplName, input#tplPrice, .item input, #tplCount {
+    font-size: 15px;
+  }
+
+  /* 日期按钮微调 */
+  .day-date-container .day-del-btn {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+  }
+
+  /* 月份按钮微调 */
+  .month-del-btn {
+    padding: 4px 8px !important;
+    font-size: 12px !important;
+  }
+
+  /* 弹窗调整 */
+  .popup-box {
+    padding: 20px;
+  }
+
+  /* 关闭对账按钮调整 */
+  .close-check-btn {
+    padding: 8px 10px !important;
+  }
+
+  /* 进一步减小顶部控件间距 */
+  .top-fixed > * + * {
+    margin-top: 4px;
+  }
+
+  /* 模板添加区域在小屏上调整 - 列宽按比例调整 */
+  .tpl-input {
+    /* 关键修改：改为三列：工序名2fr，单价1.5fr，对号按钮40px */
+    grid-template-columns: 2fr 1.5fr 40px;
+    gap: 4px;
+  }
+
+  .tpl-input .tpl-add-btn {
+    min-height: 36px;
+    font-size: 14px;
+    padding: 8px 10px !important;
+  }
+
+  /* 日期区域按钮在小屏上调整 */
+  .date-buttons button {
+    padding: 8px 10px !important;
+    min-height: 36px !important;
+  }
+
+  /* 日下面工序记录在小屏上调整 - 列宽按比例调整 */
+  .item-head,.item {
+    grid-template-columns: 2fr 1.5fr 1.5fr 40px;
+    gap: 4px;
+  }
+}
+
+/* 针对大屏手机优化（如折叠屏展开状态） */
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+  .tpl-list {
+    grid-template-columns: repeat(3, 1fr);
+    max-height: 140px;
+  }
+
+  .tpl-item {
+    font-size: 16px;
+    min-height: 44px;
+  }
+}
+
+/* 新增样式：高亮刚刚添加的行 */
+.new-added-item {
+  animation: highlight 1.5s ease-out;
+  border-left: 4px solid #2d4a6c !important;
+  background: linear-gradient(90deg, #e8f0ff 0%, #ffffff 100%) !important;
+}
+
+@keyframes highlight {
+  0% {
+    background: linear-gradient(90deg, #d8e8ff 0%, #ffffff 100%);
+    transform: scale(1);
+  }
+  50% {
+    background: linear-gradient(90deg, #c8dbff 0%, #ffffff 100%);
+    transform: scale(1.02);
+  }
+  100% {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    transform: scale(1);
+  }
+}
+
+/* 文件管理器提示样式 */
+.file-manager-hint {
+  background: linear-gradient(180deg, #e8f5ff 0%, #d4edff 100%);
+  border: 1px solid #b3d9ff;
+  color: #155724;
+  padding: 10px;
+  border-radius: 8px;
+  margin: 10px 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.file-manager-hint strong {
+  color: #0c5460;
+}
+
+/* 恢复数据弹窗样式 - 新增 */
+.restore-popup {
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(220, 230, 240, 0.8);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 420px;
+  width: 90%;
+}
+
+.restore-popup .popup-title {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #334455;
+}
+
+.restore-popup .popup-path {
+  font-size: 14px;
+  color: #556677;
+  margin-bottom: 12px;
+  padding: 8px;
+  background: rgba(240, 244, 248, 0.8);
+  border-radius: 8px;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.restore-popup .popup-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.restore-popup .popup-buttons button {
+  min-height: 44px;
+  font-size: 16px;
+}
+
+.restore-popup .popup-buttons .btn-primary {
+  background: linear-gradient(180deg, #d8e8ff 0%, #c5d9f8 100%)!important;
+  color: #2d4a6c!important;
+  border: 1px solid rgba(180,200,230,0.8)!important;
+}
+
+.restore-popup .popup-buttons .btn-secondary {
+  background: linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%)!important;
+  color: #445566!important;
+  border: 1px solid rgba(200,210,225,0.7)!important;
+}
+
+.restore-popup .popup-buttons .btn-danger {
+  background: linear-gradient(180deg, #ffe8e8 0%, #ffd4d4 100%)!important;
+  color: #8b4a4a!important;
+  border: none!important;
 }
 </style>
 </head>
 <body>
 
-<div class="main">
-  <h3>计件工资</h3>
-
-  <div class="tpl-box">
-    <div class="tpl-title">常用工序</div>
-    <div class="tpl-input">
-      <input id="tplName" placeholder="工序名称">
-      <input id="tplPrice" placeholder="单价" type="number" step="0.5" min="0.5">
+<div class="popup-mask" id="dailyPopup">
+  <div class="popup-box">
+    <div class="popup-title">今日状态</div>
+    <p>请选择今天上班还是休息？</p>
+    <div class="jump-row" style="margin-top:12px;">
+      <button class="btn-primary" onclick="selectWork()">上班</button>
+      <button onclick="selectRest()">休息</button>
     </div>
-    <button onclick="addTpl()" style="width:100%;background:#007aff;margin-bottom:6px;padding:6px;border:none;border-radius:4px;color:#fff">➕ 添加模板</button>
-    <div id="tplList" class="tpl-list"></div>
-  </div>
-
-  <div id="days"></div>
-  
-  <div style="display:flex;gap:5px;margin-top:8px">
-    <button style="flex:1;background:#007aff;padding:7px;border:none;border-radius:5px;color:#fff;font-size:13px" onclick="addWorkDay()">➕ 上班</button>
-    <button style="flex:1;background:#999;padding:7px;border:none;border-radius:5px;color:#fff;font-size:13px" onclick="addRestDay()">😴 休息</button>
-    <button style="flex:1;background:#f33;padding:7px;border:none;border-radius:5px;color:#fff;font-size:13px" onclick="clearEmptyItems()">🗑 清空白</button>
-  </div>
-
-  <div class="btn-row">
-    <button class="btn-half btn-expand" onclick="expandAll()">📂 一键展开所有</button>
-    <button class="btn-half btn-collapse" onclick="collapseAll()">📁 一键收起所有</button>
-  </div>
-
-  <button class="export" onclick="exportAll()">📊 导出 Excel</button>
-
-  <div class="all-total">全月总计：<span id="allTotal">0.00</span> 元</div>
-
-  <div class="trash-box">
-    <div class="trash-title">🗑 回收站（仅保留3天）</div>
-    <div id="trashList"></div>
-    <button class="clear-trash" onclick="clearTrash()">清空回收站</button>
   </div>
 </div>
 
-<script>
-function debounce(func, wait){
-  let timer;
-  return (...args)=>{
-    clearTimeout(timer);
-    timer=setTimeout(()=>func(...args), wait);
-  }
-}
+<!-- 回收站面板 - 按钮顺序调整：退出回收站在上，清空在下 -->
+<div class="trash-panel" id="trashPanel">
+  <div class="panel-title">🗑 回收站（3天自动清理）</div>
+  <div class="panel-top-btns">
+    <!-- 按钮组：退出回收站在上，清空在下 -->
+    <div class="trash-btn-group">
+      <button class="exit-trash-btn" onclick="closeAllPanels()">退出回收站</button>
+      <button class="trash-clear-btn" onclick="clearTrash()">清空</button>
+    </div>
+  </div>
+  <div class="panel-scroll-content" id="trashList"></div>
+</div>
 
-function getTodayMD(){
+<div class="main" id="mainPage">
+  <div class="top-fixed">
+    <div class="tpl-box" style="padding:6px;">
+      <!-- 模板添加区域 - 移除数量输入框和按钮，确认按钮改为对号 -->
+      <div class="tpl-input">
+        <input id="tplName" placeholder="工序名称">
+        <input id="tplPrice" placeholder="单价" type="number" step="0.5" min="0.5">
+        <!-- 关键修改：数量输入框已移除，确认按钮改为对号，占据第三个位置 -->
+        <button class="tpl-add-btn" onclick="addTpl()">✔️</button>
+      </div>
+      <div id="tplList" class="tpl-list"></div>
+    </div>
+
+    <!-- 本月统计 - 已移除重复的月份标题统计 -->
+    <div class="stats-box" id="statsBox">
+      <div class="stats-title">📊 本月统计</div>
+      <div class="stats-content" id="statsContent">暂无数据</div>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-top:6px">
+      <button onclick="openTrash()" style="flex:1;min-height:40px;font-size:16px;">🗑 回收站</button>
+      <button onclick="openCheck()" style="flex:1;min-height:40px;font-size:16px;">📊 对账</button>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-top:6px">
+      <button onclick="addOrToggleWork()" style="flex:1;min-height:40px;font-size:16px;">上班</button>
+      <button onclick="addOrToggleRest()" style="flex:1;min-height:40px;font-size:16px;">休息</button>
+    </div>
+<!-- 调整后的跳转日期控件布局 - 日期输入框、跳转按钮、回到今日按钮在同一行 -->
+<div class="date-buttons">
+  <input type="date" id="jumpDate" style="flex:2;">
+  <button onclick="jumpToDate()" style="flex:1;">跳转日期</button>
+  <button onclick="jumpToToday()" style="flex:1;">回到今日</button>
+</div>
+
+<!-- 备份恢复按钮区域 -->
+<div class="backup-restore-btns">
+  <button onclick="backupData()" style="flex:1;min-height:40px;font-size:16px;">💾 备份数据(Excel)</button>
+  <button onclick="showRestoreOptions()" style="flex:1;min-height:40px;font-size:16px;">📂 恢复数据(Excel)</button>
+</div>
+</div>
+
+<div class="scroll-container" id="daysContainer"></div>
+</div>
+
+<!-- 对账面板 - 关闭按钮 -->
+<div class="check-panel" id="checkPanel">
+  <div class="panel-title">📊 对账模式</div>
+  <div class="panel-top-btns">
+    <!-- 关闭对账按钮 - 与回收站按钮大小完全一致 -->
+    <button class="close-check-btn" onclick="closeAllPanels()">关闭对账</button>
+  </div>
+  <div class="panel-scroll-content">
+    <div class="jump-row" style="margin:10px 0;">
+      <input type="date" id="checkJumpDate">
+      <button onclick="checkJumpToDate()">跳转日期</button>
+    </div>
+    <select class="check-month-select" id="checkMonthSelect" onchange="onCheckMonthChange()" style="width:100%;margin-bottom:10px;border-radius:10px;padding:8px;background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);border:1px solid rgba(200,210,225,0.8);font-size:16px;color:#445566;"></select>
+    <div id="checkMonthDetail" style="font-size:16px;line-height:1.5;color:#445566;"></div>
+  </div>
+</div>
+
+<!-- 新增：恢复数据选择弹窗 -->
+<div class="popup-mask" id="restorePopup">
+  <div class="restore-popup">
+    <div class="popup-title">📂 恢复数据</div>
+    <div class="popup-path" id="restorePathInfo">请选择Excel备份文件(.csv)</div>
+    <div class="popup-buttons" id="restoreButtons">
+      <!-- 动态生成按钮 -->
+    </div>
+  </div>
+</div>
+
+<div class="exit-toast" id="exitToast"></div>
+<div class="file-toast" id="fileToast"></div>
+<div class="success-toast" id="successToast"></div>
+<div class="error-toast" id="errorToast"></div>
+
+<script>
+// ===== 全局变量定义（确保在所有函数之前声明） =====
+let data = {
+  days: [],
+  trash: [],
+  tpl: [], // 模板数组，初始为空
+  editRecords: {},
+  manualExpand: {},
+  monthCollapse: {},
+  checkMode: false,
+  checkMonth: ""
+};
+
+let trashCollapse = {};
+let trashDayExpand = {};
+let scrollTarget = null; // 用于滚动定位
+let lastBackTime = 0;
+let exitToastTimer = null;
+
+// ===== 全局辅助函数 =====
+const getTodayMD = () => {
   const d = new Date();
   const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return `${y}/${m}/${day}`;
-}
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+};
 
-function parseMD(s){
-  if(!s) return 0;
-  const parts = s.split('/');
-  if(parts.length!==3) return 0;
-  const y=+parts[0], m=+parts[1], d=+parts[2];
-  return y*10000+m*100+d;
-}
+// 修复：修复getMonthKey函数的语法错误
+const getMonthKey = (md) => {
+  if (!md) return "";
+  const parts = md.split('-');
+  if (parts.length < 2) return "";
+  return parts[0] + "-" + parts[1];
+};
 
-function sortDays(arr){
-  return [...arr].sort((a,b)=>parseMD(a.md)-parseMD(b.md));
-}
+const sortDays = (arr) => {
+  return [...arr].sort((a, b) => a.md.localeCompare(b.md));
+};
 
-const defaultTpl = [
-  { name: "41D后盖", price: 2.0 },
-  { name: "39B半轴", price: 4.0 },
-  { name: "904半轴", price: 3.5 },
-  { name: "2004半轴", price: 4.0 },
-  { name: "LY1104——30A托架", price: 4.5 },
-  { name: "EP半轴", price: 4.0 },
-  { name: "1204半轴", price: 3.5 },
-  { name: "T14大油底壳", price: 5.0 },
-  { name: "101大制动器", price: 3.0 },
-  { name: "T7大油底壳", price: 5.0 },
-  { name: "102制动器", price: 3.0 },
-  { name: "过桥壳体", price: 6.0 },
-  { name: "传动箱", price: 5.0 },
-  { name: "提升轴支架", price: 3.0 },
-  { name: "704制动器", price: 1.0 },
-  { name: "1-4-30托架", price: 4.5 }
-];
+const groupByMonth = (days) => {
+  const map = {};
+  days.forEach(day => {
+    const mk = getMonthKey(day.md);
+    if (!mk) return;
+    if (!map[mk]) map[mk] = [];
+    map[mk].push(day);
+  });
+  const keys = Object.keys(map).sort();
+  const res = [];
+  keys.forEach(k => {
+    res.push({ monthKey: k, days: sortDays(map[k]) });
+  });
+  return res;
+};
 
-let savedData = JSON.parse(localStorage.getItem('jijian_final'));
-if (!savedData) {
-  savedData = { days: [], trash: [], tpl: defaultTpl, editRecords: {} };
-}
-const data = savedData;
+const validatePrice = (price) => {
+  if (isNaN(price) || price < 0) {
+    showError("单价必须是正数");
+    return false;
+  }
+  if (price > 9999) {
+    showError("单价不能超过9999");
+    return false;
+  }
+  return true;
+};
 
-function cleanTrashAfter3Days() {
-  const now = Date.now();
-  const threeDays = 3*24*60*60*1000;
-  data.trash = data.trash.filter(item=> item.delTime && now-item.delTime < threeDays);
-}
+const validateCount = (count) => {
+  if (isNaN(count) || count <= 0) {
+    showError("数量必须是正数");
+    return false;
+  }
+  if (count > 9999) {
+    showError("数量不能超过9999");
+    return false;
+  }
+  return true;
+};
 
-window.addEventListener('beforeunload', ()=>{
-  delete data.manualExpand;
-  localStorage.setItem('jijian_final', JSON.stringify(data));
-});
+const showSuccess = (message) => {
+  const toast = document.getElementById('successToast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 2000);
+};
 
-window.onload=()=>{
-  cleanTrashAfter3Days();
-  renderAll();
+const showError = (message) => {
+  const toast = document.getElementById('errorToast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 3000);
+};
+
+const showFileToast = (message) => {
+  const toast = document.getElementById('fileToast');
+  toast.textContent = message;
+  toast.style.display = 'block';
+  setTimeout(() => { toast.style.display = 'none'; }, 5000);
+};
+
+const showFileManagerHint = () => {
+  showFileToast('请从文件管理器中选择备份文件');
+};
+
+const today = getTodayMD();
+
+// ===== 保存函数 =====
+const save = () => {
+  const dataToSave = { days: data.days, trash: data.trash, tpl: data.tpl, editRecords: data.editRecords };
+  localStorage.setItem('jijian_final_v3', JSON.stringify(dataToSave));
+};
+
+// ===== 核心业务函数（全部定义在全局作用域） =====
+
+// 1. 模板相关函数（保留功能，但初始模板列表为空）
+const addTpl = () => {
+  const name = document.getElementById('tplName').value.trim();
+  const price = parseFloat(document.getElementById('tplPrice').value);
+
+  if (!name || isNaN(price) || price < 0.5) { showError('名称/单价不能为空，单价需≥0.5'); return; }
+  if (!validatePrice(price)) return;
+  if (data.tpl.some(t => t.name.trim() === name.trim())) { showError('该工序已存在'); return; }
+
+  // 关键修改：数量固定为1，不再需要用户输入
+  const count = 1;
+  data.tpl.push({ name, price, count });
+  save();
   renderTpl();
-  save();
-}
+  syncAllViews();
+  showSuccess('模板添加成功');
+  document.getElementById('tplName').value = '';
+  document.getElementById('tplPrice').value = '';
+};
 
-function renderTpl(){
-  let h='';
-  data.tpl.forEach((o,i)=>{
-    h+=`<div class="tpl-item">
-          <span class="tpl-use" onclick="useTpl(${i})">+</span>
-          <span class="tpl-text" onclick="editTpl(${i})">${o.name} ${o.price}元</span>
-          <span class="tpl-del" onclick="delTpl(${i})">✕</span>
-        </div>`;
-  });
-  tplList.innerHTML=h;
-}
-
-function addTpl(){
-  const n=tplName.value.trim();
-  const p=parseFloat(tplPrice.value);
-  if(!n||isNaN(p)||p<0.5){alert('工序名必填，单价≥0.5');return;}
-  data.tpl.push({name:n,price:p});
-  save();renderTpl();tplName.value='';tplPrice.value='';
-}
-
-function delTpl(i){
-  if(confirm('删除该模板？')){data.tpl.splice(i,1);save();renderTpl();}
-}
-
-function editTpl(i){
-  const item=data.tpl[i];
-  let res=prompt("名称："+item.name+"\n单价："+item.price+"\n格式：名称|单价",item.name+"|"+item.price);
-  if(!res)return;
-  let arr=res.split("|");
-  let newName=(arr[0]||"").trim();
-  let newPrice=parseFloat(arr[1]||0);
-  if(!newName||isNaN(newPrice)||newPrice<0.5){alert("格式错误");return;}
-  data.tpl[i].name=newName; data.tpl[i].price=newPrice;
-  save();renderTpl();
-}
-
-function useTpl(i){
-  const t=data.tpl[i];
-  const today=getTodayMD();
-  let di=data.days.findIndex(x=>x.md===today&&x.type==='work');
-  if(di===-1){data.days.push({type:'work',md:today,items:[]});di=data.days.length-1;}
-  data.days[di].items.push({name:t.name,price:t.price,count:''});
-  save();renderAll();
-}
-
-function renderAll(){
-  const sd=sortDays(data.days);
-  const today=getTodayMD();
-  let h='';
-  sd.forEach((day,i)=>{
-    let sum=0;
-    if(day.type==='work'){
-      sum=day.items.reduce((t,it)=>t+(+it.price||0)*(+it.count||0),0);
-    }
-    let display="block";
-    if(data.manualExpand && data.manualExpand[day.md]!=null){
-      display=data.manualExpand[day.md]?"block":"none";
-    }else{
-      let needCollapse=false;
-      if(day.md!==today)needCollapse=true;
-      if((i+1)%5===0)needCollapse=true;
-      if(needCollapse)display="none";
-    }
-    h+=`<div class="day-box">
-          <div class="day-head">
-            <div class="day-left">
-              <span class="collapse-btn" onclick="toggleDay(${i},'${day.md}')">▼</span>
-              <input type="date" style="padding:4px;width:140px;font-size:12px" 
-                value="${day.md.replace(/\//g,'-')}" onchange="updDayFromDate(${i},this.value)">
-              <button class="del-btn" onclick="moveToTrash(${i})">删</button>
-            </div>
-            ${day.type==='work'?`<div class="day-total">当日：${sum.toFixed(2)}</div>`:'<div class="day-rest">休息日</div>'}
-          </div>
-          <div id="dayWrap${i}" style="display:${display}">
-            ${day.type==='work'?`
-            <div class="item-head"><div>工序</div><div>单价</div><div>数量</div><div>操作</div></div>
-            <div id="dayItems${i}"></div>
-            <button class="add-row-btn" onclick="addOneItem(${i})">➕ 新增一行</button>`:''}
-          </div>
-        </div>`;
-  });
-  days.innerHTML=h;
-  sd.forEach((day,i)=>{if(day.type==='work')renderDay(i);});
-  renderTrash(); sumAll();
-}
-
-function toggleDay(i,md){
-  const e=document.getElementById('dayWrap'+i);
-  const now=e.style.display==='none';
-  e.style.display=now?'block':'none';
-  if(!data.manualExpand)data.manualExpand={};
-  data.manualExpand[md]=now;
-  save();
-}
-
-function expandAll(){
-  document.querySelectorAll('[id^="dayWrap"]').forEach((el,idx)=>{
-    el.style.display='block';
-    if(data.days[idx]){if(!data.manualExpand)data.manualExpand={};data.manualExpand[data.days[idx].md]=true;}
-  });
-  save();
-}
-
-function collapseAll(){
-  document.querySelectorAll('[id^="dayWrap"]').forEach((el,idx)=>{
-    el.style.display='none';
-    if(data.days[idx]){if(!data.manualExpand)data.manualExpand={};data.manualExpand[data.days[idx].md]=false;}
-  });
-  save();
-}
-
-function renderDay(i){
-  const d=data.days[i];
-  let h='';
-  d.items.forEach((it,j)=>{
-    h+=`<div class="item">
-          <input placeholder="工序" value="${it.name}" oninput="updItem(${i},${j},'name',this.value)">
-          <input placeholder="单价" value="${it.price}" type="number" step="0.5" oninput="updItem(${i},${j},'price',this.value)">
-          <input placeholder="数量" value="${it.count}" type="number" oninput="updItem(${i},${j},'count',this.value)">
-          <button class="item-del" onclick="delOneItem(${i},${j})">✕</button>
-        </div>`;
-  });
-  document.getElementById('dayItems'+i).innerHTML=h;
-}
-
-function addOneItem(dayIdx){
-  data.days[dayIdx].items.push({name:"",price:"",count:""});
-  save();renderAll();
-}
-function delOneItem(dayIdx,itemIdx){
-  data.days[dayIdx].items.splice(itemIdx,1);
-  save();renderAll();
-}
-
-function moveToTrash(i){
-  const day=data.days[i];
-  day.delTime=Date.now();
-  data.trash.push(day);
-  data.days.splice(i,1);
-  cleanTrashAfter3Days();
-  save();renderAll();
-}
-
-function renderTrash(){
-  let h='';
-  if(data.trash.length===0)h='<div style="padding:6px;text-align:center;color:#999">空</div>';
-  else data.trash.forEach((it,i)=>{
-    h+=`<div class="trash-item">
-          <div>${it.md} ${it.type==="work"?"上班":"休息"}</div>
-          <div>
-            <button class="trash-restore" onclick="restoreFromTrash(${i})">恢复</button>
-            <button class="trash-delete" onclick="permanentDelete(${i})">删除</button>
-          </div>
-        </div>`;
-  });
-  trashList.innerHTML=h;
-}
-
-function updDayFromDate(i,v){
-  if(!v)return;
-  const [y,m,d]=v.split('-');
-  const newMd=`${y}/${m}/${d}`;
-  if(data.days.some((x,j)=>j!==i&&x.md===newMd)){alert("日期重复");return;}
-  delete data.editRecords[data.days[i].md];
-  data.days[i].md=newMd;
-  data.editRecords[newMd]=Date.now();
-  save();renderAll();
-}
-
-function addWorkDay(){
-  const md=getTodayMD();
-  if(data.days.some(x=>x.md===md)){
-    if(!confirm("当天已有记录，是否覆盖为上班？"))return;
-    data.days=data.days.filter(x=>x.md!==md);
+const delTpl = (i) => {
+  if (confirm('删除模板？')) {
+    data.tpl.splice(i, 1);
+    save();
+    renderTpl();
+    syncAllViews();
+    showSuccess('模板已删除');
   }
-  data.days.push({type:'work',md,items:[]});
-  data.editRecords[md]=Date.now();
-  save();renderAll();
-}
+};
 
-function addRestDay(){
-  const md=getTodayMD();
-  if(data.days.some(x=>x.md===md)){
-    if(!confirm("当天已有记录，是否覆盖为休息？"))return;
-    data.days=data.days.filter(x=>x.md!==md);
+const useTpl = (i) => {
+  const todayItem = data.days.find(d => d.md === today);
+  if (todayItem && todayItem.type === 'rest') { showError('休息日无法添加工序'); return; }
+  let todayIdx = data.days.findIndex(d => d.md === today);
+  if (todayIdx === -1) {
+    data.days.push({ type: 'work', md: today, items: [] });
+    todayIdx = data.days.length - 1;
   }
-  data.days.push({type:'rest',md});
-  save();renderAll();
-}
+  const t = data.tpl[i];
+  if (hasSameProcessInDay(today, t.name)) { showError('该工序今日已添加'); return; }
+  if (!data.days[todayIdx].items) data.days[todayIdx].items = [];
 
-function restoreFromTrash(i){
-  const day=data.trash[i];
-  if(data.days.some(x=>x.md===day.md)){alert("日期已存在");return;}
-  data.days.push(day);
-  data.trash.splice(i,1);
-  save();renderAll();
-}
-function permanentDelete(i){
-  if(confirm("永久删除？")){data.trash.splice(i,1);save();renderTrash();}
-}
-function clearTrash(){
-  if(confirm("清空回收站？")){data.trash=[];save();renderTrash();}
-}
-function clearEmptyItems(){
-  let ch=false;
-  data.days.forEach(day=>{
-    if(day.type==='work'){
-      const oldLen=day.items.length;
-      day.items=day.items.filter(it=>it.name&&it.price&&it.count);
-      if(day.items.length<oldLen)ch=true;
+  // 记录刚刚添加的工序索引
+  const newItemIndex = data.days[todayIdx].items.length;
+
+  // 关键修改：使用模板时，数量初始值为空，让用户手动输入
+  data.days[todayIdx].items.push({ name: t.name, price: t.price, count: "" });
+  save();
+
+  // 跳转到今日，并指定要滚动到的行
+  jumpToToday({ index: newItemIndex });
+
+  showSuccess(`✅ 已添加工序：${t.name}`);
+};
+
+// 2. 数据操作函数
+const addOrToggleWork = () => {
+  const today = getTodayMD();
+  const i = data.days.findIndex(d => d.md === today);
+  if (i !== -1 && data.days[i].type === 'work') { showError('今日已上班'); return; }
+  if (i === -1) {
+    data.days.push({ type: 'work', md: today, items: [] });
+  } else {
+    data.days[i].type = 'work';
+    if (!data.days[i].items) data.days[i].items = [];
+  }
+  data.manualExpand[today] = true;
+  const mk = getMonthKey(today);
+  data.monthCollapse[mk] = false;
+  save();
+  syncAllViews();
+  showSuccess('今日已标记上班');
+};
+
+const addOrToggleRest = () => {
+  const today = getTodayMD();
+  const i = data.days.findIndex(d => d.md === today);
+  if (i !== -1 && data.days[i].type === 'rest') { showError('今日已休息'); return; }
+  if (i === -1) data.days.push({ type: 'rest', md: today });
+  else data.days[i].type = 'rest';
+  save();
+  syncAllViews();
+  showSuccess('今日已标记休息');
+};
+
+const deleteDay = (md) => {
+  if (!confirm(`确定删除 ${md}？`)) return;
+  const day = data.days.find(d => d.md === md);
+  if (day) { day.delTime = Date.now(); data.trash.push(day); }
+  data.days = data.days.filter(d => d.md !== md);
+  delete data.manualExpand[md];
+  const mk = getMonthKey(md);
+  trashCollapse[mk] = false;
+  save();
+  syncAllViews();
+  showSuccess('已移入回收站');
+};
+
+// ===== 新增：自动备份指定月份函数 =====
+const autoBackupMonth = (monthKey) => {
+  try {
+    const [y, m] = monthKey.split('-');
+    const monthData = data.days.filter(d => getMonthKey(d.md) === monthKey);
+    const trashData = data.trash.filter(d => getMonthKey(d.md) === monthKey);
+
+    // 如果这个月没有数据，不备份
+    if (monthData.length === 0 && trashData.length === 0) {
+      return;
     }
-  });
-  if(ch){save();renderAll();alert("已清空空白项");}else alert("无空白项");
-}
 
-const updItem=debounce((di,ii,k,v)=>{
-  const it=data.days[di].items[ii];
-  if(k==='price')it.price=Math.max(0.5,parseFloat(v)||0);
-  else if(k==='count')it.count=Math.max(0,parseInt(v)||0);
-  else it.name=v.trim();
-  data.editRecords[data.days[di].md]=Date.now();
-  save();renderAll();sumAll();
-},300);
+    const fileName = `计件工资备份_${y}${m}月.csv`;
 
-function sumAll(){
-  let total=0;
-  sortDays(data.days).forEach(day=>{
-    if(day.type==='work'){
-      total+=day.items.reduce((s,it)=>s+(+it.price||0)*(+it.count||0),0);
-    }
-  });
-  allTotal.innerText=total.toFixed(2);
-}
+    // 构建CSV内容
+    let csvContent = "";
+    // 第一行：标题行
+    csvContent += "日期,类型,工序,单价,数量,金额,备注\n";
 
-function save(){
-  localStorage.setItem('jijian_final',JSON.stringify(data));
-}
-
-function exportAll(){
-  try{
-    const sd=sortDays(data.days);
-    let csv="\uFEFF日期,类型,工序,单价,数量,小计\n";
-    sd.forEach(day=>{
-      if(day.type==='rest'){csv+=`${day.md},休息日,,,\n`;return;}
-      let daySum=0;
-      day.items.forEach(it=>{
-        const p=+it.price||0,c=+it.count||0,t=p*c;daySum+=t;
-        csv+=`${day.md},上班,${it.name},${p},${c},${t.toFixed(2)}\n`;
-      });
-      csv+=`${day.md},当日合计,,,,${daySum.toFixed(2)}\n`;
+    // 遍历工作日，生成数据行
+    monthData.forEach(day => {
+      if (day.type === 'work' && Array.isArray(day.items)) {
+        day.items.forEach(item => {
+          const money = ((+item.price || 0) * (+item.count || 0)).toFixed(2);
+          csvContent += `${day.md},上班,${item.name || ''},${item.price || 0},${item.count || 0},${money},\n`;
+        });
+      } else if (day.type === 'rest') {
+        csvContent += `${day.md},休息,,,,,\n`;
+      }
     });
-    const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
-    const a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download="计件工资.csv";
+
+    // 添加汇总信息
+    if (monthData.length > 0) {
+      let totalIncome = 0;
+      let workDays = 0;
+      let restDays = 0;
+
+      monthData.forEach(day => {
+        if (day.type === 'work') {
+          workDays++;
+          if (Array.isArray(day.items)) {
+            day.items.forEach(item => {
+              totalIncome += (+item.price || 0) * (+item.count || 0);
+            });
+          }
+        } else {
+          restDays++;
+        }
+      });
+
+      csvContent += `\n汇总,总计,工作天数：${workDays},休息天数：${restDays},总金额：${totalIncome.toFixed(2)},,\n`;
+    }
+
+    // 保存到公共下载目录（用户可直接访问，避免Android系统目录限制）
+    if (window.plus) {
+      plus.io.requestFileSystem(plus.io.PUBLIC_DOWNLOADS, function(fs) {
+        fs.root.getFile(fileName, { create: true }, function(fileEntry) {
+          fileEntry.createWriter(function(writer) {
+            writer.onwrite = function() {
+              // 自动备份成功，只显示短暂提示
+              const toast = document.getElementById('successToast');
+              toast.textContent = `✅ 已自动备份 ${y}年${m}月`;
+              toast.style.display = 'block';
+              setTimeout(() => { toast.style.display = 'none'; }, 1500);
+            };
+            writer.onerror = function(e) {
+              console.error("自动备份失败：" + e.message);
+              // 自动备份失败，只记录日志，不打断用户操作
+            };
+            writer.seek(0);
+            writer.write(csvContent);
+          });
+        });
+      }, function(e) {
+        // 降级：尝试保存到文档目录
+        plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs) {
+          fs.root.getFile(fileName, { create: true }, function(fileEntry) {
+            fileEntry.createWriter(function(writer) {
+              writer.onwrite = function() {
+                const toast = document.getElementById('successToast');
+                toast.textContent = `✅ 已自动备份 ${y}年${m}月`;
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 1500);
+              };
+              writer.onerror = function(e) {
+                console.error("自动备份失败：" + e.message);
+              };
+              writer.seek(0);
+              writer.write(csvContent);
+            });
+          });
+        }, function(e) {
+          console.error("自动备份失败：无法访问存储目录");
+        });
+      });
+    } else {
+      // 浏览器环境：使用Blob下载
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        // 自动备份成功，只显示短暂提示
+        const toast = document.getElementById('successToast');
+        toast.textContent = `✅ 已自动备份 ${y}年${m}月`;
+        toast.style.display = 'block';
+        setTimeout(() => { toast.style.display = 'none'; }, 1500);
+      }, 300);
+    }
+  } catch (error) {
+    console.error('自动备份错误:', error);
+    // 自动备份失败，只记录日志，不打断用户操作
+  }
+};
+
+// ===== 关键修改：删除月份函数 =====
+const deleteMonth = (mk) => {
+  if (!mk) return;
+  const [y, m] = mk.split('-');
+  if (!confirm(`确认删除 ${y}年${m}月 所有数据？`)) return;
+
+  // 先自动备份这个月的数据
+  autoBackupMonth(mk);
+
+  // 关键修改：不再自动备份，仅放入回收站
+  const monthData = data.days.filter(d => getMonthKey(d.md) === mk);
+  monthData.forEach(item => { item.delTime = Date.now(); data.trash.push(item); });
+  data.days = data.days.filter(d => getMonthKey(d.md) !== mk);
+  Object.keys(data.manualExpand).forEach(md => { if (getMonthKey(md) === mk) delete data.manualExpand[md]; });
+  delete data.monthCollapse[mk];
+  trashCollapse[mk] = true;
+  save();
+  syncAllViews();
+  showSuccess(`已存入回收站`);
+};
+
+// ===== 备份恢复函数 - 生成Excel兼容的.csv文件 =====
+const backupData = () => {
+  try {
+    // 检查是否有可备份的数据
+    if (data.days.length === 0 && data.tpl.length === 0 && data.trash.length === 0) {
+      showError('当前没有数据可备份');
+      return;
+    }
+
+    // 生成Excel兼容的.csv格式备份
+    const today = getTodayMD();
+    const fileName = `计件工资备份_${today}.csv`;
+
+    // 构建CSV内容
+    let csvContent = "";
+
+    // 第一行：标题行
+    csvContent += "日期,类型,工序,单价,数量,金额,备注\n";
+
+    // 遍历所有工作日，生成数据行
+    data.days.forEach(day => {
+      if (day.type === 'work' && Array.isArray(day.items)) {
+        day.items.forEach(item => {
+          const money = ((+item.price || 0) * (+item.count || 0)).toFixed(2);
+          csvContent += `${day.md},上班,${item.name || ''},${item.price || 0},${item.count || 0},${money},\n`;
+        });
+      } else if (day.type === 'rest') {
+        csvContent += `${day.md},休息,,,,,\n`;
+      }
+    });
+
+    // 添加汇总信息
+    if (data.days.length > 0) {
+      let totalIncome = 0;
+      let workDays = 0;
+      let restDays = 0;
+
+      data.days.forEach(day => {
+        if (day.type === 'work') {
+          workDays++;
+          if (Array.isArray(day.items)) {
+            day.items.forEach(item => {
+              totalIncome += (+item.price || 0) * (+item.count || 0);
+            });
+          }
+        } else {
+          restDays++;
+        }
+      });
+
+      csvContent += `\n汇总,总计,工作天数：${workDays},休息天数：${restDays},总金额：${totalIncome.toFixed(2)},,\n`;
+    }
+
+    // 保存到公共下载目录（用户可直接访问，避免Android系统目录限制）
+    if (window.plus) {
+      plus.io.requestFileSystem(plus.io.PUBLIC_DOWNLOADS, function(fs) {
+        fs.root.getFile(fileName, { create: true }, function(fileEntry) {
+          fileEntry.createWriter(function(writer) {
+            writer.onwrite = function() {
+              // 获取完整路径
+              const fullPath = fileEntry.fullPath;
+              showFileToast(`✅ Excel备份成功！\n文件已保存到下载目录：\n${fullPath}\n\n请在文件管理器中查看`);
+            };
+            writer.onerror = function(e) {
+              showError("备份失败：" + e.message);
+            };
+            writer.seek(0);
+            writer.write(csvContent);
+          });
+        });
+      }, function(e) {
+        // 降级：尝试保存到文档目录
+        plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs) {
+          fs.root.getFile(fileName, { create: true }, function(fileEntry) {
+            fileEntry.createWriter(function(writer) {
+              writer.onwrite = function() {
+                const fullPath = fileEntry.fullPath;
+                showFileToast(`✅ Excel备份成功！\n文件已保存到文档目录：\n${fullPath}\n\n请在文件管理器中查看`);
+              };
+              writer.onerror = function(e) {
+                showError("备份失败：" + e.message);
+              };
+              writer.seek(0);
+              writer.write(csvContent);
+            });
+          });
+        }, function(e) {
+          showError("无法访问存储目录，请检查权限");
+        });
+      });
+    } else {
+      // 浏览器环境下的降级方案
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showFileToast(`✅ Excel备份成功！\n文件已下载到浏览器默认位置`);
+      }, 300);
+    }
+  } catch (error) {
+    console.error('备份错误:', error);
+    showError('备份失败：' + error.message);
+  }
+};
+
+// ===== 新增：恢复数据相关函数 =====
+const showRestoreOptions = () => {
+  console.log("showRestoreOptions called");
+  const popup = document.getElementById('restorePopup');
+  const pathInfo = document.getElementById('restorePathInfo');
+  const buttonsContainer = document.getElementById('restoreButtons');
+
+  // 生成当前日期作为提示
+  const today = getTodayMD();
+  // 修改：使用指定的路径格式
+  const dynamicHint = `/storage/emulated/0/Android/data/com.jijian.gongzi/downloads/计件工资备份_${today}.csv`;
+
+  // 设置指引信息，包含动态日期提示
+  pathInfo.innerHTML = `<strong>请按以下步骤操作：</strong><br>
+                        1. 打开文件管理器<br>
+                        2. 进入下载目录<br>
+                        3. 找到并选择备份文件<br>
+                        <span style="color:#888;font-size:12px;">提示：当前路径格式为 ${dynamicHint}</span>`;
+
+  // 清空按钮容器
+  buttonsContainer.innerHTML = '';
+
+  // 添加使用文件管理器的按钮（自动过滤备份文件）
+  const fileManagerBtn = document.createElement('button');
+  fileManagerBtn.textContent = '📂 使用文件管理器选择备份文件';
+  fileManagerBtn.className = 'btn-primary';
+  fileManagerBtn.onclick = () => {
+    console.log("文件管理器按钮被点击");
+    popup.style.display = 'none';
+    // 使用 H5+ 的文件选择器，只显示备份文件
+    if (window.plus) {
+      plus.io.chooseFile({
+        multiple: false,
+        types: ["txt", "json", "csv"],
+        filter: function(file) {
+          // 只显示以「计件工资备份_」开头的文件
+          return file.name.startsWith('计件工资备份_');
+        }
+      }, function(files) {
+        if (files.length === 0) {
+          showError("未选择任何备份文件");
+          return;
+        }
+        const filePath = files[0];
+        if (!filePath) {
+          showError("文件路径无效");
+          return;
+        }
+        // 调用处理函数
+        processSelectedFile(filePath);
+      }, function(err) {
+        console.log("文件选择器错误:", err);
+        showError("无法打开文件选择器，请使用文件管理器");
+      });
+    } else {
+      // 浏览器环境：显示文件选择器
+      console.log("浏览器环境，创建文件输入框");
+      const fileInput = document.createElement('input');
+      fileInput.type = 'file';
+      fileInput.accept = '.csv,.txt,.json';
+      fileInput.style.display = 'none'; // 隐藏
+      fileInput.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+          showError("未选择文件");
+          return;
+        }
+        console.log("文件选择成功:", file.name);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          console.log("文件读取成功");
+          processFileContent(event.target.result, file.name);
+        };
+        reader.onerror = (e) => {
+          console.error("文件读取错误:", e);
+          showError("文件读取失败");
+        };
+        reader.readAsText(file);
+        // 从DOM中移除
+        document.body.removeChild(fileInput);
+      };
+      document.body.appendChild(fileInput);
+      fileInput.click();
+    }
+  };
+  buttonsContainer.appendChild(fileManagerBtn);
+
+  // 手动输入路径按钮
+  const manualPathBtn = document.createElement('button');
+  manualPathBtn.textContent = '📝 手动输入文件路径';
+  manualPathBtn.className = 'btn-secondary';
+  manualPathBtn.onclick = () => {
+    console.log("手动输入按钮被点击");
+    popup.style.display = 'none';
+    // 使用动态生成的路径作为默认值
+    const defaultPath = `/storage/emulated/0/Android/data/com.jijian.gongzi/downloads/计件工资备份_${today}.csv`;
+    const filePath = prompt("请输入备份文件的完整路径：", defaultPath);
+    // 调用前校验
+    if (!filePath || filePath.trim() === '') {
+      showError("文件路径不能为空或无效");
+      return;
+    }
+    // 调用全局函数
+    processSelectedFile(filePath);
+  };
+  buttonsContainer.appendChild(manualPathBtn);
+
+  // 取消按钮
+  const cancelBtn = document.createElement('button');
+  cancelBtn.textContent = '❌ 取消';
+  cancelBtn.className = 'btn-danger';
+  cancelBtn.onclick = () => {
+    console.log("取消按钮被点击");
+    popup.style.display = 'none';
+  };
+  buttonsContainer.appendChild(cancelBtn);
+
+  // 显示弹窗
+  popup.style.display = 'flex';
+  console.log("弹窗已显示");
+};
+
+// ===== 文件处理函数 =====
+const processSelectedFile = (filePath) => {
+  console.log("processSelectedFile called, filePath:", filePath);
+  // 最顶部的校验：如果 filePath 是 undefined 或空，直接终止
+  if (!filePath || filePath.trim() === '') {
+    showError("文件路径不能为空或无效");
+    return;
+  }
+
+  console.log("✅ 选择的文件:", filePath);
+  plus.io.resolveLocalFileSystemURL(filePath, function(fileEntry) {
+    fileEntry.file(function(file) {
+      // 修复：使用 plus.io.FileReader 代替不存在的 plus.io.createFileReader
+      const reader = new plus.io.FileReader();
+      reader.onload = function(e) {
+        try {
+          const content = e.target.result;
+          let backupData;
+
+          // 现在 filePath 一定有效，不会再报 endsWith 错误
+          if (filePath.endsWith('.csv')) {
+            // CSV 解析逻辑
+            const lines = content.split('\n').filter(line => line.trim());
+            backupData = { days: [], tpl: [] };
+            let currentDay = null;
+
+            lines.forEach(line => {
+              const cols = line.split(',').map(c => c.trim());
+              if (cols[0] && cols[0].match(/^\d{4}-\d{2}-\d{2}$/)) {
+                if (cols[1] === '休息') {
+                  backupData.days.push({ md: cols[0], type: 'rest' });
+                } else if (cols[1] === '上班' && cols[2]) {
+                  if (!currentDay || currentDay.md !== cols[0]) {
+                    currentDay = { md: cols[0], type: 'work', items: [] };
+                    backupData.days.push(currentDay);
+                  }
+                  currentDay.items.push({
+                    name: cols[2],
+                    price: parseFloat(cols[3]) || 0,
+                    count: parseFloat(cols[4]) || 0
+                  });
+                }
+              }
+            });
+          } else {
+            // JSON 解析逻辑
+            backupData = JSON.parse(content);
+          }
+
+          if (confirm("恢复将覆盖当前数据，确定？")) {
+            data.days = backupData.days || [];
+            data.trash = backupData.trash || [];
+            data.tpl = backupData.tpl || []; // 恢复模板数据
+            data.editRecords = backupData.editRecords || {};
+            save();
+            syncAllViews();
+            showSuccess("数据恢复成功");
+          }
+        } catch (err) {
+          showError("文件解析错误：" + err.message);
+          console.error("解析错误:", err);
+        }
+      };
+      reader.onerror = function(e) {
+        showError("文件读取失败：" + e.message);
+        console.error("文件读取错误:", e);
+      };
+      reader.readAsText(file);
+    }, function(err) {
+      showError("读取文件失败：" + err.message);
+    });
+  }, function(err) {
+    showError("无法访问文件：" + err.message);
+  });
+};
+
+// 浏览器环境下的文件处理函数
+const processFileContent = (content, fileName) => {
+  console.log("processFileContent called, fileName:", fileName);
+  try {
+    let backupData;
+    const isCsv = fileName.endsWith('.csv');
+
+    if (isCsv) {
+      // CSV 解析逻辑
+      const lines = content.split('\n').filter(line => line.trim());
+      backupData = { days: [], tpl: [] };
+      let currentDay = null;
+
+      lines.forEach(line => {
+        const cols = line.split(',').map(c => c.trim());
+        if (cols[0] && cols[0].match(/^\d{4}-\d{2}-\d{2}$/)) {
+          if (cols[1] === '休息') {
+            backupData.days.push({ md: cols[0], type: 'rest' });
+          } else if (cols[1] === '上班' && cols[2]) {
+            if (!currentDay || currentDay.md !== cols[0]) {
+              currentDay = { md: cols[0], type: 'work', items: [] };
+              backupData.days.push(currentDay);
+            }
+            currentDay.items.push({
+              name: cols[2],
+              price: parseFloat(cols[3]) || 0,
+              count: parseFloat(cols[4]) || 0
+            });
+          }
+        }
+      });
+    } else {
+      // JSON 解析逻辑
+      backupData = JSON.parse(content);
+    }
+
+    console.log("解析完成，准备恢复数据");
+    if (confirm("恢复将覆盖当前数据，确定？")) {
+      data.days = backupData.days || [];
+      data.trash = backupData.trash || [];
+      data.tpl = backupData.tpl || []; // 恢复模板数据
+      data.editRecords = backupData.editRecords || {};
+      save();
+      syncAllViews();
+      showSuccess("数据恢复成功");
+    }
+  } catch (err) {
+    showError("文件解析错误：" + err.message);
+    console.error("解析错误:", err);
+  }
+};
+
+// 4. 跳转函数
+const jumpToToday = (scrollTargetInfo = null) => {
+  const todayMD = getTodayMD();
+  if (!data.days.some(d => d.md === todayMD)) { showError('今日未添加'); return; }
+  jumpToDateAndExpand(todayMD, scrollTargetInfo);
+};
+
+const jumpToDate = () => {
+  const md = document.getElementById('jumpDate').value;
+  jumpToDateAndExpand(md);
+};
+
+// 5. 面板控制函数
+const openTrash = () => {
+  const panel = document.getElementById('trashPanel');
+  panel.classList.add('show');
+  panel.style.transform = 'translateX(0)';
+  renderTrashList();
+};
+
+const openCheck = () => {
+  const panel = document.getElementById('checkPanel');
+  panel.classList.add('show');
+  panel.style.transform = 'translateX(0)';
+  refreshCheckMonthSelect();
+  const firstMonth = document.getElementById('checkMonthSelect').value;
+  if (firstMonth) renderCheckMonthDetail(firstMonth);
+  else document.getElementById('checkMonthDetail').innerHTML = '<div style="text-align:center;color:#778899;padding:20px;">暂无记录</div>';
+};
+
+const closeAllPanels = () => {
+  const trashPanel = document.getElementById('trashPanel');
+  const checkPanel = document.getElementById('checkPanel');
+  trashPanel.classList.remove('show');
+  checkPanel.classList.remove('show');
+  trashPanel.style.transform = 'translateX(-100%)';
+  checkPanel.style.transform = 'translateX(100%)';
+  // 同时关闭所有弹窗
+  document.getElementById('restorePopup').style.display = 'none';
+};
+
+// 6. 其他函数
+const clearTrash = () => {
+  if (confirm('确定清空回收站？不可恢复！')) {
+    data.trash = [];
+    trashCollapse = {};
+    trashDayExpand = {};
+    save();
+    renderTrashList();
+    showSuccess('✅ 回收站已清空');
+  }
+};
+
+const checkJumpToDate = () => {
+  const md = document.getElementById('checkJumpDate').value;
+  if (!md) { showError('请选日期'); return; }
+  if (!data.days.some(d => d.md === md)) { showError('无记录'); return; }
+  const mk = getMonthKey(md);
+  document.getElementById('checkMonthSelect').value = mk;
+  renderCheckMonthDetail(mk);
+  showSuccess(`✅ 已跳转到 ${md}`);
+};
+
+const onCheckMonthChange = () => {
+  const v = document.getElementById('checkMonthSelect').value;
+  if (v) renderCheckMonthDetail(v);
+};
+
+// 修复：导出CSV函数 - 使用原生API写入，避免下载弹窗
+const exportMonthDataToExcel = (monthKey) => {
+  const g = groupByMonth(data.days).find(x => x.monthKey === monthKey);
+  if (!g) { showError('该月份无数据'); return; }
+  const [y, m] = monthKey.split('-');
+  let csv = "\uFEFF日期,类型,工序,单价,数量,金额\n";
+  let totalIncome = 0;
+  g.days.forEach(d => {
+    if (d.type === 'rest') {
+      csv += `${d.md},休息,,,,\n`;
+    } else if (Array.isArray(d.items)) {
+      d.items.forEach(it => {
+        const money = ((+it.price || 0) * (+it.count || 0)).toFixed(2);
+        totalIncome += (+it.price || 0) * (+it.count || 0);
+        csv += `${d.md},上班,${it.name || ''},${it.price || 0},${it.count || 0},${money}\n`;
+      });
+    }
+  });
+  csv += `\n汇总,总计, , , ,${totalIncome.toFixed(2)}\n`;
+
+  // 使用原生API写入文件，避免浏览器下载弹窗
+  const fileName = `${y}${m}月计件工资.csv`;
+  const textData = csv;
+
+  // 优先尝试写入公共Download目录
+  if (window.plus) {
+    plus.io.requestFileSystem(plus.io.PUBLIC_DOWNLOADS, function(fs) {
+      fs.root.getFile(fileName, { create: true }, function(fileEntry) {
+        fileEntry.createWriter(function(writer) {
+          writer.onwrite = function() {
+            showFileToast("✅ 导出成功！\n文件已保存到「下载」目录：\n" + fileName);
+          };
+          writer.onerror = function(e) {
+            showError("写入文件失败：" + e.message);
+          };
+          writer.seek(0);
+          writer.write(textData);
+        });
+      }, function(e) {
+        showError("创建文件失败：" + e.message);
+      });
+    }, function(e) {
+      // 降级：写入公共Documents目录
+      plus.io.requestFileSystem(plus.io.PUBLIC_DOCUMENTS, function(fs) {
+        fs.root.getFile(fileName, { create: true }, function(fileEntry) {
+          fileEntry.createWriter(function(writer) {
+            writer.onwrite = function() {
+              showFileToast("✅ 导出成功！\n文件已保存到「文档」目录：\n" + fileName);
+            };
+            writer.onerror = function(e) {
+              showError("写入文件失败：" + e.message);
+            };
+            writer.seek(0);
+            writer.write(textData);
+          });
+        });
+      }, function(e) {
+        showError("备份失败：无法访问存储目录，请检查权限");
+      });
+    });
+  } else {
+    // 浏览器环境：使用Blob下载
+    const blob = new Blob([textData], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
     a.click();
-  }catch(e){alert("导出失败："+e.message);}
-}
+    setTimeout(() => {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showFileToast(`✅ 导出成功！\n文件已下载：${fileName}`);
+    }, 300);
+  }
+};
+
+const selectWork = () => {
+  addOrToggleWork();
+  localStorage.setItem('lastPopupDate', getTodayMD());
+  document.getElementById('dailyPopup').style.display = 'none';
+};
+
+const selectRest = () => {
+  addOrToggleRest();
+  localStorage.setItem('lastPopupDate', getTodayMD());
+  document.getElementById('dailyPopup').style.display = 'none';
+};
+
+// ===== 渲染函数 =====
+const renderTpl = () => {
+  let h = '';
+  data.tpl.forEach((o, i) => {
+    h += `<div class="tpl-item">
+            <span class="tpl-text" onclick="useTpl(${i})">${o.name} ${o.price}元 × ${o.count}</span>
+            <span class="tpl-del" onclick="delTpl(${i})">✕</span>
+          </div>`;
+  });
+  document.getElementById('tplList').innerHTML = h;
+};
+
+const renderAll = () => {
+  const sorted = sortDays(data.days);
+  const groups = groupByMonth(sorted);
+  let h = '';
+  groups.forEach(g => {
+    const mk = g.monthKey;
+    const [y, m] = mk.split('-');
+    const show = `${y}年${m}月`;
+    const col = data.monthCollapse[mk] !== false;
+    const ic = col ? "▶" : "▼";
+    const dis = col ? "none" : "block";
+
+    h += `<div class="month-box" data-mk="${mk}">
+            <div class="month-head">
+              <div class="month-title-container">
+                <span class="month-toggle" onclick="toggleMonth('${mk}')">${ic}</span>
+                <span class="month-text">${show}</span>
+              </div>
+              <button class="month-del-btn" onclick="deleteMonth('${mk}')">✕</button>
+            </div>
+            <div class="month-body" style="display:${dis}">${renderMonthDays(g.days)}</div>
+          </div>`;
+  });
+  document.getElementById('daysContainer').innerHTML = h;
+
+  // 清空滚动目标，避免影响后续操作
+  scrollTarget = null;
+
+  updateStats();
+};
+
+const renderMonthDays = (ms) => {
+  let h = '';
+  ms.forEach(d => {
+    let s = 0;
+    if (d.type === 'work' && Array.isArray(d.items)) {
+      s = d.items.reduce((t, it) => t + (+it.price || 0) * (+it.count || 0), 0);
+    }
+    const i = data.days.findIndex(x => x.md === d.md);
+    const e = data.manualExpand[d.md] === true;
+    const dc = e ? "▼" : "▶";
+    const di = e ? "block" : "none";
+
+    // 日期叉号放在日期后面
+    h += `<div class="day-box" data-md="${d.md}">
+            <div class="day-head">
+              <div class="day-left" style="display:flex;align-items:center;gap:6px;">
+                <span class="collapse-btn" onclick="toggleDay('${d.md}')">${dc}</span>
+                <div class="day-date-container">
+                  <input type="date" value="${d.md}" onchange="updDayFromDate(${i},this.value)">
+                  <button class="day-del-btn" onclick="deleteDay('${d.md}')">✕</button>
+                </div>
+              </div>
+              ${d.type === 'work' ? `<div class="day-total">当日：${s.toFixed(2)}</div>` : '<div class="day-rest">休息日</div>'}
+            </div>
+            <div style="display:${di};margin-top:6px">
+              ${d.type === 'work' ? `<div id="dayItems_${d.md}"></div><button class="add-row-btn" onclick="addOneItem(${i})">➕ 新增一行</button>` : ''}
+            </div>
+          </div>`;
+  });
+  setTimeout(() => { ms.forEach(d => { if (d.type === 'work') renderDayByMd(d.md); }); }, 0);
+  return h;
+};
+
+const renderDayByMd = (md) => {
+  const d = data.days.find(x => x.md === md);
+  if (!d || d.type !== 'work') return;
+  const e = document.getElementById(`dayItems_${md}`);
+  if (!e) return;
+  let h = '';
+  const i = data.days.findIndex(x => x.md === md);
+  if (!d.items) d.items = [];
+
+  // 检查是否需要高亮某一行
+  let highlightIndex = null;
+  if (scrollTarget && scrollTarget.type === 'item' && scrollTarget.md === md) {
+    highlightIndex = scrollTarget.index;
+  }
+
+  d.items.forEach((it, j) => {
+    const isHighlighted = j === highlightIndex;
+    const highlightClass = isHighlighted ? ' new-added-item' : '';
+
+    h += `<div class="item${highlightClass}" ${isHighlighted ? `id="newAddedItem"` : ''}>
+            <input placeholder="工序" value="${it.name}" oninput="updItem(${i},${j},'name',this.value)">
+            <input placeholder="单价" value="${it.price}" type="number" step="0.5" min="0" oninput="updItem(${i},${j},'price',this.value)">
+            <input placeholder="数量" value="${it.count}" type="number" min="0" oninput="updItem(${i},${j},'count',this.value)">
+            <button class="item-del" onclick="delOneItem(${i},${j})">✕</button>
+          </div>`;
+  });
+  e.innerHTML = h;
+};
+
+const renderTrashList = () => {
+  const groups = groupByMonth(data.trash);
+  let html = '';
+  groups.forEach(g => {
+    const mk = g.monthKey;
+    const collapsed = trashCollapse[mk] !== false;
+    const icon = collapsed ? '▶' : '▼';
+    html += `<div class="month-box">
+              <div class="month-head" onclick="toggleTrashMonth('${mk}')" style="cursor:pointer;">
+                <span>${icon}</span> ${mk.replace('-', '年') + '月'}
+              </div>
+              <div class="month-body" style="display:${collapsed ? 'none' : 'block'};">`;
+    g.days.forEach((it, seqInMonth) => {
+      const md = it.md;
+      const dayExpanded = trashDayExpand[md] === true;
+      const dayIcon = dayExpanded ? '▼' : '▶';
+      html += `<div class="day-box" style="padding:6px 8px;">
+                <div class="day-head" style="padding:0;">
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span onclick="toggleTrashDay('${md}')" style="cursor:pointer;">${dayIcon}</span>
+                    <span>${md} ${it.type === 'work' ? '上班' : '休息'}</span>
+                  </div>
+                  <button onclick="restoreFromTrashIdx('${mk}', ${seqInMonth})" style="padding:4px 8px;font-size:16px;">恢复</button>
+                </div>
+                <div style="display:${dayExpanded ? 'block' : 'none'};padding-top:6px;">`;
+      if (it.type === 'work' && it.items && it.items.length) {
+        it.items.forEach(item => { html += `<div class="tpl-item" style="margin:2px 0;padding:4px 8px;font-size:14px;">${item.name || ''} · ${item.price || 0} × ${item.count || 0}</div>`; });
+      }
+      html += `</div></div>`;
+    });
+    html += `</div></div>`;
+  });
+  document.getElementById('trashList').innerHTML = html;
+};
+
+const refreshCheckMonthSelect = () => {
+  const s = document.getElementById('checkMonthSelect');
+  s.innerHTML = '';
+  groupByMonth(data.days).forEach(g => {
+    const e = document.createElement('option');
+    e.value = g.monthKey;
+    e.textContent = g.monthKey.replace('-', '年') + '月';
+    s.appendChild(e);
+  });
+};
+
+const renderCheckMonthDetail = (mk) => {
+  const e = document.getElementById('checkMonthDetail');
+  const g = groupByMonth(data.days).find(x => x.monthKey === mk);
+  if (!g) { e.innerHTML = '<div style="text-align:center;color:#778899;padding:20px;">暂无记录</div>'; return; }
+  let h = `<div style="font-weight:600;margin-bottom:10px;color:#334455;">${mk.replace('-', '年') + '月'} 对账明细</div>`;
+  let total = 0;
+  let workDays = 0;
+  let restDays = 0;
+  g.days.forEach(d => {
+    if (d.type === 'rest') { h += `<div style="margin:6px 0;color:#667788;">${d.md} 休息日</div>`; restDays++; }
+    else {
+      workDays++;
+      let daySum = 0;
+      h += `<div style="margin:6px 0 4px;font-weight:600;color:#334455;">📅 ${d.md}</div>`;
+      if (Array.isArray(d.items)) {
+        d.items.forEach(it => {
+          const m = (+it.price || 0) * (+it.count || 0);
+          daySum += m;
+          h += `<div style="padding:4px;background:#fff;border-radius:8px;margin-bottom:4px;border:1px solid #eee;font-size:14px;">${it.name || ''} ${it.price || 0} × ${it.count || 0} = ${m.toFixed(2)}</div>`;
+        });
+      }
+      h += `<div style="text-align:right;font-weight:600;margin-bottom:10px;color:#2d4a6c;font-size:14px;">当日：${daySum.toFixed(2)}</div>`;
+      total += daySum;
+    }
+  });
+  h += `<div style="margin-top:10px;padding-top:10px;border-top:1px solid #e0e8f0;color:#334455;font-size:14px;">
+          <div>工作天数：${workDays}天</div>
+          <div>休息天数：${restDays}天</div>
+        </div>`;
+  e.innerHTML = h;
+};
+
+const updateStats = () => {
+  const currentMonth = getCurrentMonthKey();
+  const monthData = data.days.filter(d => getMonthKey(d.md) === currentMonth && d.type === 'work');
+  if (monthData.length === 0) {
+    document.getElementById('statsContent').innerHTML = '本月暂无数据';
+    return;
+  }
+  let totalIncome = 0;
+  let totalDays = monthData.length;
+  monthData.forEach(day => {
+    if (Array.isArray(day.items)) {
+      day.items.forEach(item => {
+        totalIncome += (+item.price || 0) * (+item.count || 0);
+      });
+    }
+  });
+  const html = `<div class="stats-item">📅 工作天数：${totalDays}天</div>`;
+  document.getElementById('statsContent').innerHTML = html;
+};
+
+// ===== 辅助函数（用于渲染） =====
+const toggleMonth = (mk) => {
+  data.monthCollapse[mk] = !data.monthCollapse[mk];
+  renderAll();
+};
+
+const toggleDay = (md) => {
+  data.manualExpand[md] = !data.manualExpand[md];
+  renderAll();
+};
+
+const toggleTrashMonth = (mk) => {
+  trashCollapse[mk] = !trashCollapse[mk];
+  renderTrashList();
+};
+
+const toggleTrashDay = (md) => {
+  trashDayExpand[md] = !trashDayExpand[md];
+  renderTrashList();
+};
+
+const updDayFromDate = (i, v) => {
+  if (!v) return;
+  const d = data.days[i];
+  if (!d) return;
+  delete data.manualExpand[d.md];
+  d.md = v;
+  save();
+  syncAllViews();
+};
+
+const hasSameProcessInDay = (dayMd, processName) => {
+  const day = data.days.find(d => d.md === dayMd && d.type === 'work');
+  if (!day || !day.items) return false;
+  return day.items.some(it => (it.name || '').trim() === (processName || '').trim());
+};
+
+const debounce = (func, wait) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => func(...args), wait);
+  };
+};
+
+const updItem = debounce((i, j, k, v) => {
+  if (i < 0 || i >= data.days.length || !data.days[i].items) return;
+  const it = data.days[i].items[j];
+  it[k] = v;
+  save();
+  syncAllViews();
+}, 300);
+
+const delOneItem = (i, j) => {
+  if (i < 0 || i >= data.days.length || !data.days[i].items) return;
+  data.days[i].items.splice(j, 1);
+  save();
+  syncAllViews();
+  showSuccess('行已删除');
+};
+
+const addOneItem = (dayIdx) => {
+  const d = data.days[dayIdx];
+  if (!d || d.type !== 'work') return;
+  if (!d.items) d.items = [];
+  d.items.push({ name: "", price: "", count: "" });
+  save();
+  syncAllViews();
+};
+
+const restoreFromTrashIdx = (monthKey, seqInMonth) => {
+  const group = groupByMonth(data.trash).find(g => g.monthKey === monthKey);
+  if (!group) return;
+  const item = group.days[seqInMonth];
+  if (!item) return;
+  const realIndex = data.trash.findIndex(t => t.md === item.md);
+  if (realIndex === -1) return;
+  data.days = data.days.filter(d => d.md !== item.md);
+  data.days.push(data.trash[realIndex]);
+  data.trash.splice(realIndex, 1);
+  save();
+  syncAllViews();
+  showSuccess('✅ 数据已恢复');
+};
+
+// ===== 跳转和滚动逻辑 =====
+const jumpToDateAndExpand = (md, scrollTargetInfo = null) => {
+  if (!md) { showError('请选择日期'); return; }
+  if (!data.days.some(d => d.md === md)) { showError('该日期无记录'); return; }
+
+  // 1. 折叠所有月份
+  Object.keys(data.monthCollapse).forEach(mk => data.monthCollapse[mk] = true);
+
+  // 2. 展开目标日期所在的月份
+  const targetMonthKey = getMonthKey(md);
+  data.monthCollapse[targetMonthKey] = false;
+
+  // 3. 折叠所有日期
+  Object.keys(data.manualExpand).forEach(mdKey => data.manualExpand[mdKey] = false);
+
+  // 4. 展开目标日期
+  data.manualExpand[md] = true;
+
+  // 5. 设置滚动目标（如果提供了）
+  if (scrollTargetInfo) {
+    scrollTarget = {
+      type: 'item',
+      md: md,
+      index: scrollTargetInfo.index
+    };
+  }
+
+  // 6. 重新渲染
+  renderAll();
+
+  // 7. 显示成功提示
+  showSuccess(`✅ 已跳转到 ${md}`);
+
+  // 8. 确保页面滚动到目标位置 - 优化滚动逻辑
+  setTimeout(() => {
+    // 获取滚动容器
+    const scrollContainer = document.querySelector('.scroll-container');
+
+    // 如果提供了滚动目标（新增行），则滚动到新增行
+    if (scrollTargetInfo) {
+      // 增加短暂延迟确保DOM完全渲染
+      setTimeout(() => {
+        const newItemElement = document.getElementById('newAddedItem');
+        if (newItemElement) {
+          // 确保新增行在视图中可见
+          newItemElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'  // 确保新增行在视图中央
+          });
+
+          // 添加视觉反馈
+          newItemElement.classList.add('new-added-item');
+
+          // 3秒后移除高亮效果
+          setTimeout(() => {
+            newItemElement.classList.remove('new-added-item');
+          }, 3000);
+
+          return; // 直接返回，不再执行其他滚动
+        }
+
+        // 如果新增行未找到，回退到查找目标日期行
+        const targetDateElement = document.querySelector(`[data-md="${md}"]`);
+        if (targetDateElement) {
+          targetDateElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center'
+          });
+        }
+      }, 100); // 100ms延迟确保渲染完成
+      return; // 直接返回，不再执行日期行的滚动
+    }
+
+    // 否则，执行原有的日期行滚动逻辑
+    // 直接查找目标日期行（带 data-md 属性的元素）
+    const targetDateElement = document.querySelector(`[data-md="${md}"]`);
+
+    if (targetDateElement) {
+      // 计算目标元素相对于滚动容器的位置
+      const containerRect = scrollContainer.getBoundingClientRect();
+      const elementRect = targetDateElement.getBoundingClientRect();
+
+      // 计算目标元素相对于容器的位置
+      const elementTopRelativeToContainer = elementRect.top - containerRect.top;
+
+      // 计算滚动偏移量，使元素出现在屏幕中下部
+      // 我们希望元素顶部距离滚动容器顶部约 200px（这个值可以根据需要调整）
+      // 这样可以为今日日期下方的“新增一行”按钮和工序记录留出足够的空白
+      const desiredOffset = 200;
+
+      // 计算需要滚动的距离
+      const scrollDistance = scrollContainer.scrollTop + elementTopRelativeToContainer - desiredOffset;
+
+      // 执行滚动
+      scrollContainer.scrollTo({
+        top: scrollDistance,
+        behavior: 'smooth'
+      });
+    } else if (targetMonthElement) {
+      // 如果没找到日期行，则回退到滚动到月份容器
+      const targetMonthElement = document.querySelector(`[data-mk="${targetMonthKey}"]`);
+      if (targetMonthElement) {
+        targetMonthElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, 100);
+};
+
+// ===== 同步视图函数 =====
+const syncAllViews = () => {
+  renderAll();
+  renderTpl(); // 重新渲染模板列表
+  syncCheckView();
+  renderTrashList();
+};
+
+const syncCheckView = () => {
+  refreshCheckMonthSelect();
+  const cur = document.getElementById('checkMonthSelect').value;
+  if (cur) renderCheckMonthDetail(cur);
+};
+
+// ===== 返回键处理 =====
+const handleBackButton = () => {
+  const now = Date.now();
+  const showToast = (message) => {
+    const toast = document.getElementById('exitToast');
+    toast.textContent = message;
+    toast.style.display = 'block';
+    if (exitToastTimer) clearTimeout(exitToastTimer);
+    exitToastTimer = setTimeout(() => { toast.style.display = 'none'; }, 2000);
+  };
+  const trashPanel = document.getElementById('trashPanel');
+  const checkPanel = document.getElementById('checkPanel');
+  const popupMask = document.getElementById('dailyPopup');
+  const restorePopup = document.getElementById('restorePopup');
+
+  if (trashPanel.classList.contains('show') || checkPanel.classList.contains('show') ||
+      popupMask.style.display === 'flex' || restorePopup.style.display === 'flex') {
+    if (trashPanel.classList.contains('show')) { trashPanel.classList.remove('show'); trashPanel.style.transform = 'translateX(-100%)'; return; }
+    if (checkPanel.classList.contains('show')) { checkPanel.classList.remove('show'); checkPanel.style.transform = 'translateX(100%)'; return; }
+    if (popupMask.style.display === 'flex') { popupMask.style.display = 'none'; return; }
+    if (restorePopup.style.display === 'flex') { restorePopup.style.display = 'none'; return; }
+  }
+  if (now - lastBackTime < 2000) { if (window.plus) plus.runtime.quit(); else window.close(); }
+  else { lastBackTime = now; showToast('再按一次退出应用'); }
+};
+
+// ===== 清理空记录函数 =====
+const cleanTrashAfter3Days = () => {
+  const now = Date.now();
+  const threeDays = 3 * 24 * 60 * 60 * 1000;
+  data.trash = data.trash.filter(item => item.delTime && now - item.delTime < threeDays);
+};
+
+const autoClearEmptyOnExit = () => {
+  let changed = false;
+  data.days.forEach(day => {
+    if (day.type === 'work' && Array.isArray(day.items)) {
+      const oldLen = day.items.length;
+      day.items = day.items.filter(it => it.name && it.name.trim() !== '' && it.price && !isNaN(+it.price) && it.count && !isNaN(+it.count));
+      if (day.items.length < oldLen) changed = true;
+    }
+  });
+  if (changed) save();
+};
+
+const checkDailyPopup = () => {
+  const lastDate = localStorage.getItem('lastPopupDate');
+  const todayStr = getTodayMD();
+  if (lastDate !== todayStr) document.getElementById('dailyPopup').style.display = 'flex';
+};
+
+// 获取当前月份key的辅助函数
+const getCurrentMonthKey = () => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  return `${y}-${m}`;
+};
+
+// ===== 初始化函数 =====
+const init = () => {
+  try {
+    // 从localStorage加载数据
+    let savedData = JSON.parse(localStorage.getItem('jijian_final_v3')) || {};
+
+    // 初始化data对象
+    data.days = savedData.days || [];
+    data.trash = savedData.trash || [];
+    data.tpl = savedData.tpl || []; // 恢复模板数据
+    data.editRecords = savedData.editRecords || {};
+
+    // 清理超过3天的回收站数据
+    cleanTrashAfter3Days();
+
+    // 渲染初始界面
+    renderTpl(); // 渲染模板列表
+    renderAll();
+    refreshCheckMonthSelect();
+    renderTrashList();
+    checkDailyPopup();
+
+    // 监听页面卸载事件
+    window.addEventListener('beforeunload', () => {
+      autoClearEmptyOnExit();
+      save();
+    });
+
+    // 初始化返回键处理
+    if (window.plus) { plus.key.addEventListener('backbutton', handleBackButton); }
+    else { document.addEventListener('keydown', (e) => { if (e.key === 'Escape') handleBackButton(); }); }
+
+    console.log('☑ 所有函数已成功绑定，模板功能正常');
+  } catch (error) {
+    console.error('初始化错误:', error);
+    showError('初始化失败，请刷新页面重试');
+  }
+};
+
+// 页面加载完成后初始化
+window.addEventListener('DOMContentLoaded', init);
 </script>
 </body>
 </html>
